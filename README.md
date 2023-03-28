@@ -16,7 +16,7 @@
 # Execution
 - Local streaming execution
 
-
+   ```
     python .\main.py 
     --runner
     DirectRunner
@@ -29,10 +29,11 @@
     --region
     "europe-north1-a"
     --streaming
+  ```
 
 - Dataflow upload template 
 
-    
+    ```
     python .\main.py 
     --runner
     DataflowRunner
@@ -46,3 +47,4 @@
     "<YOUR-PROJECT>"
     --region
     "europe-north1-a"
+  ```
