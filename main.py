@@ -21,9 +21,9 @@ from google.cloud import storage
 from google.cloud import bigquery
 from apache_beam.options.pipeline_options import PipelineOptions
 
-OUT_TABLE_ID = "testing_table_pubsub"
-OUT_DATASET_ID = "testing_data"
-PROJECT_ID = "jordi-playground-data"
+OUT_TABLE_ID = ""
+OUT_DATASET_ID = ""
+PROJECT_ID = ""
 IN_BUCKET_ID = "ghack-data-challenge-2023"
 
 
@@ -131,14 +131,14 @@ def run_pipeline(custom_args, beam_args):
 
     with beam.Pipeline(options=opts) as p:
         files_to_load = (
-                    p | 'Querying PubSub Topic' >> beam.io.ReadFromPubSub(topic=custom_args.topic, with_attributes=True)
-                    | "Extract Attribute" >> beam.ParDo(ExtractObjectId()))
+                    p | 'Step 1' >> beam.io.ReadFromPubSub(topic=custom_args.topic, with_attributes=True)
+                    | 'Step 2' >> beam.ParDo(ExtractObjectId()))
 
-        load_rows_from_files = files_to_load | 'Reading files' >> beam.Map(read_from_gcs)
+        load_rows_from_files = files_to_load | 'Step 3' >> beam.Map(read_from_gcs)
 
-        records_to_dataframe = load_rows_from_files | 'Print records' >> beam.ParDo(dataframe_work)
+        records_to_dataframe = load_rows_from_files | 'Step 4' >> beam.ParDo(dataframe_work)
 
-        dataframe_to_bigquery = records_to_dataframe | 'Print records 2' >> beam.ParDo(write_to_bigquery)
+        dataframe_to_bigquery = records_to_dataframe | 'Step 5' >> beam.ParDo(write_to_bigquery)
 
 
 if __name__ == '__main__':
